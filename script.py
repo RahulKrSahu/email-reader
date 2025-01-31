@@ -6,7 +6,6 @@ import os
 import time
 from twilio.rest import Client
 
-# Load environment variables
 load_dotenv()
 
 EMAIL_USER = os.getenv("EMAIL_USER")
@@ -15,13 +14,11 @@ IMAP_SERVER = os.getenv("IMAP_SERVER")
 SEARCH_BRANCH = os.getenv("SEARCH_BRANCH", "MCA")
 EMAIL_YEAR = os.getenv("EMAIL_YEAR", "2024")
 
-# Twilio credentials
 TWILIO_SID = os.getenv("TWILIO_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER")
 YOUR_WHATSAPP_NUMBER = os.getenv("YOUR_WHATSAPP_NUMBER")
 
-# Store processed email IDs
 processed_emails = set()
 
 def clean_text(text):
@@ -56,7 +53,7 @@ def check_new_emails():
 
         for email_id in email_ids:
             if email_id in processed_emails:
-                continue  # Skip already processed emails
+                continue  
 
             status, msg_data = mail.fetch(email_id, "(RFC822)")
 
@@ -97,14 +94,13 @@ def check_new_emails():
                         message = f"📩 New Email\nFrom: {from_email}\nSubject: {subject}\nDate: {email_date}\nPreview: {clean_text(body[:300])}..."
                         send_whatsapp_message(message)
 
-                        processed_emails.add(email_id)  # Mark email as processed
+                        processed_emails.add(email_id)  
 
         mail.logout()
 
     except Exception as e:
         print("Error:", str(e))
 
-# Run continuously
 while True:
     check_new_emails()
-    time.sleep(60)  # Wait 1 minute before checking again
+    time.sleep(60)  
