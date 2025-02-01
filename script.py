@@ -21,8 +21,6 @@ PERSONAL_WHATSAPP_NUMBER = os.getenv("PERSONAL_WHATSAPP_NUMBER")
 
 processed_emails = set()
 
-def clean_text(text):
-    return "".join(c if c.isalnum() or c.isspace() else " " for c in text)
 
 def send_whatsapp_message(message):
     try:
@@ -91,7 +89,7 @@ def check_new_emails():
                     if SEARCH_BRANCH.lower() in body.lower():
                         print(f"📩 New Email - From: {from_email}, Subject: {subject}")
 
-                        message = f"📩 New Email\nFrom: {from_email}\nSubject: {subject}\nDate: {email_date}\nPreview: {clean_text(body[:300])}..."
+                        message = f"📩 New Email\nFrom: {from_email}\nSubject: {subject}\nDate: {email_date}\nPreview: {body[:300]}..."
                         send_whatsapp_message(message)
 
                         processed_emails.add(email_id)  
