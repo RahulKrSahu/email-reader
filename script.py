@@ -101,6 +101,4 @@ def check_new_emails():
     except Exception as e:
         print("Error:", str(e))
 
-while True:
-    check_new_emails()
-    time.sleep(60)  
+check_new_emails()
