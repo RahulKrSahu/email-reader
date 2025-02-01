@@ -27,7 +27,7 @@ def send_whatsapp_message(message):
         client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
         client.messages.create(
             from_=f"whatsapp:{TWILIO_WHATSAPP_NUMBER}",
-            to=f"whatsapp:{YOUR_WHATSAPP_NUMBER}",
+            to=f"whatsapp:{PERSONAL_WHATSAPP_NUMBER}",
             body=message
         )
         print("✅ WhatsApp message sent!")
