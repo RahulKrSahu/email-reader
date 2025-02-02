@@ -89,7 +89,7 @@ def check_new_emails():
                     if SEARCH_BRANCH.lower() in body.lower():
                         print(f"📩 New Email - From: {from_email}, Subject: {subject}")
 
-                        message = f"📩 New Email\nFrom: {from_email}\nSubject: {subject}\nDate: {email_date}\nPreview: {body[:300]}..."
+                        message = f"📩 New Email\nFrom: {from_email}\nSubject: {subject}\nDate: {email_date}\nPreview: {body}"
                         send_whatsapp_message(message)
 
                         processed_emails.add(email_id)  
