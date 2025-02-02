@@ -1,4 +1,4 @@
-name: Email to WhatsApp Notification
+name: Email to WhatsApp Notification (Debug Mode)
 
 on:
   schedule:
@@ -23,6 +23,35 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Debug Environment Variables
+        run: |
+          echo "Checking environment variables..."
+          echo "EMAIL_USER: ${EMAIL_USER:-NOT SET}"
+          echo "IMAP_SERVER: ${IMAP_SERVER:-NOT SET}"
+          echo "TWILIO_SID: ${TWILIO_SID:-NOT SET}"
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          IMAP_SERVER: ${{ secrets.IMAP_SERVER }}
+          TWILIO_SID: ${{ secrets.TWILIO_SID }}
+
+      - name: Test IMAP Connection
+        run: |
+          echo "Testing IMAP connection..."
+          nc -zv imap.gmail.com 993 || echo "IMAP server not reachable"
+
+      - name: Test Twilio API
+        run: |
+          echo "Testing Twilio API..."
+          curl -X GET "https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json" -u "${TWILIO_SID}:${TWILIO_AUTH_TOKEN}"
+        env:
+          TWILIO_SID: ${{ secrets.TWILIO_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+
+      - name: Enable Debug Logging
+        run: |
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+
       - name: Run email checking script
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
@@ -36,3 +65,7 @@ jobs:
           PERSONAL_WHATSAPP_NUMBER: ${{ secrets.PERSONAL_WHATSAPP_NUMBER }}
         run: |
           python script.py
+
+      - name: Start SSH Debugging (tmate)
+        uses: mxschmitt/action-tmate@v3
+        if: always()
